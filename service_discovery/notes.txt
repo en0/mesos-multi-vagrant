@@ -1,0 +1,12 @@
+http://docs.projectcalico.org/en/latest/ubuntu-opens-install.html
+
+# TL;DR
+# Install etcd on master(s)
+# Run as service bound to 0.0.0.0:PORT(s)
+# Install etcd on slave(s)
+# Run as proxy
+
+Prereqs on all nodes:
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:project-calico/kilo
+apt-get install etcd python-etcd

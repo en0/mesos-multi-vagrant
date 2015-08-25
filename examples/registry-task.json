@@ -1,0 +1,19 @@
+{
+    "cmd": "docker-registry",
+    "container": {
+        "docker": {
+            "type": "DOCKER",
+            "image": "registry:2.1.1",
+            "network": "BRIDGE",
+            "parameters": [],
+            "portMappings": [
+                { "containerPort": 5000, "hostPort": 0, "protocol": "tcp", "servicePort": 80 }
+            ]
+        }
+    },
+    "id": "registry",
+    "cpus": 0.25,
+    "instances": 1,
+    "mem": 32,
+    "ports": [ 0 ]
+}

@@ -8,7 +8,7 @@
 Vagrant.configure(2) do |config|
 
   config.vm.provider "libvirt" do |lv|
-    lv.memory = "512"
+    lv.memory = "1024"
   end
 
   config.vm.define "master" do |master|
@@ -27,6 +27,14 @@ Vagrant.configure(2) do |config|
       sudo service mesos-master start
       sudo service marathon start
       sudo service chronos start
+      sudo exec /usr/local/bin/etcd --name="default" \
+        --advertise-client-urls="http://172.31.0.100:2379,http://172.31.0.100:4001" \
+        --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \
+        --listen-peer-urls="http://0.0.0.0:2380" \
+        --initial-advertise-peer-urls="http://172.31.0.100:2380" \
+        --initial-cluster-token="$(uuidgen)" \
+        --initial-cluster="default=http://172.31.0.100:2380" \
+        --initial-cluster-state="new" >> /var/log/etcd.log 2>&1
     SHELL
   end
 
@@ -39,6 +47,7 @@ Vagrant.configure(2) do |config|
       echo "172.31.0.101" | sudo tee /etc/mesos-slave/ip
       echo "slave1" | sudo tee /etc/mesos-slave/hostname
       sudo service mesos-slave start
+      sudo exec /usr/local/bin/etcd --proxy on --initial-cluster="default=http://172.31.0.100:2380"
     SHELL
   end
 
@@ -51,6 +60,7 @@ Vagrant.configure(2) do |config|
       echo "172.31.0.102" | sudo tee /etc/mesos-slave/ip
       echo "slave2" | sudo tee /etc/mesos-slave/hostname
       sudo service mesos-slave start
+      sudo exec /usr/local/bin/etcd --proxy on --initial-cluster="default=http://172.31.0.100:2380"
     SHELL
   end
 
@@ -63,13 +73,9 @@ Vagrant.configure(2) do |config|
       echo "172.31.0.103" | sudo tee /etc/mesos-slave/ip
       echo "slave3" | sudo tee /etc/mesos-slave/hostname
       sudo service mesos-slave start
+      sudo exec /usr/local/bin/etcd --proxy on --initial-cluster="default=http://172.31.0.100:2380"
     SHELL
   end
 
   config.vm.box_check_update = false
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
 end

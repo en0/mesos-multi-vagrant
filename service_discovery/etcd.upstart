@@ -25,7 +25,7 @@ start() {
   start-stop-daemon --start --background --quiet \
                     --pidfile "$PID" --make-pidfile \
                     --chdir "/var/etcd" \
-                    --startas /bin/bash -- -c "exec /usr/local/bin/etcd >>/var/log/etcd.log 2>&1"
+                    --startas /bin/bash -- -c "exec /usr/local/bin/etcd $ARGS >> /var/log/etcd.log 2>&1"
 }
 
 stop() {
