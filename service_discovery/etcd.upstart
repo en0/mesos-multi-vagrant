@@ -1,0 +1,60 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          etcd
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Init for etcd
+# Description:       etcd 2.0 distributed key-value store
+### END INIT INFO
+set -ue
+
+NAME="etcd"
+DESC="etcd"
+
+. /lib/lsb/init-functions
+
+PID=/var/run/etcd.pid
+
+if [ -f "/etc/default/etcd" ]; then
+  . /etc/default/etcd
+fi
+
+start() {
+  start-stop-daemon --start --background --quiet \
+                    --pidfile "$PID" --make-pidfile \
+                    --chdir "/var/etcd" \
+                    --startas /bin/bash -- -c "exec /usr/local/bin/etcd >>/var/log/etcd.log 2>&1"
+}
+
+stop() {
+  start-stop-daemon --stop --quiet --pidfile "$PID"
+}
+
+case "${1-}" in
+  start)
+    echo -n "Starting $DESC: "
+    start
+    echo "$NAME."
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+    stop
+    echo "$NAME."
+    ;;
+  restart)
+    echo -n "Restarting $DESC: "
+    stop
+    sleep 1
+    start
+    echo "$NAME."
+    ;;
+  status)
+    status_of_proc -p "$PID" "$NAME" "$NAME"
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}" >&2
+    exit 1
+    ;;
+esac
