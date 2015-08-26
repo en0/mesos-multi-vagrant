@@ -1,7 +1,7 @@
 PACKAGES="
 curl
 unzip
-vim-nox
+vim-tiny
 mesos
 "
 

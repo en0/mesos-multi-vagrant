@@ -17,15 +17,23 @@ DESC="etcd"
 
 PID=/var/run/etcd.pid
 
-if [ -f "/etc/default/etcd" ]; then
-  . /etc/default/etcd
-fi
+. /etc/default/etcd
+LOG="${etcd_log_file}"
+CWD="${etcd_cwd}"
+OPTS='--name="${etcd_name}" \
+      --advertise-client-urls="${etcd_advertise_client_urls}" \
+      --listen-client-urls="${etcd_listen_client_urls}" \
+      --listen-peer-urls="${etcd_listen_peer_urls}" \
+      --initial-advertise-peer-urls="${etcd_initial_advertise_peer_urls}" \
+      --initial-cluster-token="${etcd_initial_cluster_token}" \
+      --initial-cluster="${etcd_initial_cluster}" \
+      --initial-cluster-state="${etcd_initial_cluster_state}"'
 
 start() {
   start-stop-daemon --start --background --quiet \
                     --pidfile "$PID" --make-pidfile \
-                    --chdir "/var/etcd" \
-                    --startas /bin/bash -- -c "exec /usr/local/bin/etcd $ARGS >> /var/log/etcd.log 2>&1"
+                    --chdir "$CWD" \
+                    --startas /bin/bash -- -c "exec /usr/local/bin/etcd $OPTS >> $LOG 2>&1"
 }
 
 stop() {
