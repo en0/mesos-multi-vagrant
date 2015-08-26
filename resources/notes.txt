@@ -1,0 +1,6 @@
+# Project Calico Step by step
+wget -q http://projectcalico.org/latest/calicoctl
+chmod +x calicoctl
+sudo modprobe xt_set
+sudo modprobe ipip
+sudo ./calicoctl node --ip="<PUBLIC IP>"
