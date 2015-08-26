@@ -1,0 +1,118 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          etcd
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Init for etcd
+# Description:       etcd 2.0 distributed key-value store
+### END INIT INFO
+set -ue
+set -o nounset
+
+NAME="etcd"
+DESC="etcd"
+
+. /lib/lsb/init-functions
+
+PID=/var/run/etcd.pid
+
+. /etc/default/etcd
+
+if [ -z "${etcd_log_file:-}" ]
+then
+    etcd_log_file="/var/log/etcd.log"
+fi
+
+if [ -z "${etcd_cwd:-}" ]
+then
+    etcd_cwd="/var/etcd"
+fi
+
+LOG="${etcd_log_file}"
+CWD="${etcd_cwd}"
+OPTS=""
+
+if [ ! -z "${etcd_proxy:-}" ]
+then
+    OPTS="${OPTS} --proxy=\"${etcd_proxy}\""
+fi
+
+if [ ! -z "${etcd_name:-}" ]
+then
+    OPTS="${OPTS} --name=\"${etcd_name}\""
+fi
+
+if [ ! -z "${etcd_advertise_client_urls:-}" ]
+then
+    OPTS="${OPTS} --advertise-client-urls=\"${etcd_advertise_client_urls}\""
+fi
+
+if [ ! -z "${etcd_listen_client_urls:-}" ]
+then
+    OPTS="${OPTS} --listen-client-urls=\"${etcd_listen_client_urls}\""
+fi
+
+if [ ! -z "${etcd_listen_peer_urls:-}" ]
+then
+    OPTS="${OPTS} --listen-peer-urls=\"${etcd_listen_peer_urls}\""
+fi
+
+if [ ! -z "${etcd_initial_advertise_peer_urls:-}" ]
+then
+    OPTS="${OPTS} --initial-advertise-peer-urls=\"${etcd_initial_advertise_peer_urls}\""
+fi
+
+if [ ! -z "${etcd_initial_cluster_token:-}" ]
+then
+    OPTS="${OPTS} --initial-cluster-token=\"${etcd_initial_cluster_token}\""
+fi
+
+if [ ! -z "${etcd_initial_cluster:-}" ]
+then
+    OPTS="${OPTS} --initial-cluster=\"${etcd_initial_cluster}\""
+fi
+
+if [ ! -z "${etcd_initial_cluster_state:-}" ]
+then
+    OPTS="${OPTS} --initial-cluster-state=\"${etcd_initial_cluster_state}\""
+fi
+
+start() {
+  start-stop-daemon --start --background --quiet \
+                    --pidfile "$PID" --make-pidfile \
+                    --chdir "$CWD" \
+                    --startas /bin/bash -- -c "exec /usr/local/bin/etcd $OPTS >> $LOG 2>&1"
+}
+
+stop() {
+  start-stop-daemon --stop --quiet --pidfile "$PID"
+}
+
+case "${1-}" in
+  start)
+    echo -n "Starting $DESC: "
+    start
+    echo "$NAME."
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+    stop
+    echo "$NAME."
+    ;;
+  restart)
+    echo -n "Restarting $DESC: "
+    stop
+    sleep 1
+    start
+    echo "$NAME."
+    ;;
+  status)
+    status_of_proc -p "$PID" "$NAME" "$NAME"
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}" >&2
+    exit 1
+    ;;
+esac

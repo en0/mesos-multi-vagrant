@@ -23,7 +23,13 @@ Vagrant.configure(2) do |config|
       echo "172.31.0.100" | sudo tee /etc/mesos-master/ip
       echo "Vagrant" | sudo tee /etc/mesos-master/cluster
       echo "master" | sudo tee /etc/mesos-master/hostname
+      sudo mv /vagrant/etcd.upstart /etc/init.d/etcd
+      sudo chmod +x /etc/init.d/etcd
+      sudo chown root:root /etc/init.d/etcd
+      sudo mv /vagrant/etcd-master.conf /etc/default/etcd
+      sudo chown root:root /etc/default/etcd
       sudo service zookeeper start
+      sudo service etcd start
       sudo service mesos-master start
       sudo service marathon start
       sudo service chronos start
@@ -38,6 +44,12 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.101" | sudo tee /etc/mesos-slave/ip
       echo "slave1" | sudo tee /etc/mesos-slave/hostname
+      sudo mv /vagrant/etcd.upstart /etc/init.d/etcd
+      sudo chmod +x /etc/init.d/etcd
+      sudo chown root:root /etc/init.d/etcd
+      sudo mv /vagrant/etcd-slave.conf /etc/default/etcd
+      sudo chown root:root /etc/default/etcd
+      sudo service etcd start
       sudo service mesos-slave start
     SHELL
   end
@@ -50,6 +62,12 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.102" | sudo tee /etc/mesos-slave/ip
       echo "slave2" | sudo tee /etc/mesos-slave/hostname
+      sudo mv /vagrant/etcd.upstart /etc/init.d/etcd
+      sudo chmod +x /etc/init.d/etcd
+      sudo chown root:root /etc/init.d/etcd
+      sudo mv /vagrant/etcd-slave.conf /etc/default/etcd
+      sudo chown root:root /etc/default/etcd
+      sudo service etcd start
       sudo service mesos-slave start
     SHELL
   end
@@ -62,19 +80,13 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.103" | sudo tee /etc/mesos-slave/ip
       echo "slave3" | sudo tee /etc/mesos-slave/hostname
+      sudo mv /vagrant/etcd-slave.conf /etc/default/etcd
+      sudo chown root:root /etc/default/etcd
+      sudo service etcd start
       sudo service mesos-slave start
     SHELL
   end
 
   config.vm.box_check_update = false
+  config.vm.synced_folder "resources/", "/vagrant"
 end
-
-      # exec /usr/local/bin/etcd --name="default" \
-        # --advertise-client-urls="http://172.31.0.100:2379,http://172.31.0.100:4001" \
-        # --listen-client-urls="http://0.0.0.0:2379,http://0.0.0.0:4001" \
-        # --listen-peer-urls="http://0.0.0.0:2380" \
-        # --initial-advertise-peer-urls="http://172.31.0.100:2380" \
-        # --initial-cluster-token="$(uuidgen)" \
-        # --initial-cluster="default=http://172.31.0.100:2380" \
-        # --initial-cluster-state="new" >> /var/log/etcd.log 2>&1
-      # sudo exec /usr/local/bin/etcd --proxy on --initial-cluster="default=http://172.31.0.100:2380"
