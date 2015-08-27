@@ -1,11 +1,7 @@
 PACKAGES="
 curl
-htop
-nmon
-slurm
-tcpdump
 unzip
-vim-nox
+vim-tiny
 mesos
 "
 
