@@ -1,0 +1,22 @@
+{
+    "cmd": "redis-server",
+    "container": {
+        "docker": {
+            "type": "DOCKER",
+            "image": "redis:latest",
+            "network": "BRIDGE",
+            "parameters": [ 
+                { "key": "hostname", "value": "redis.weave.local" }
+            ],
+            "portMappings": [ ]
+        }
+    },
+    "id": "redis",
+    "cpus": 0.5,
+    "instances": 1,
+    "mem": 32,
+    "ports": [ 0 ],
+    "env": {
+        "DOCKER_HOST": "tcp://localhost:12375"
+    }
+}
