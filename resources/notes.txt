@@ -1,6 +1,16 @@
+#!/usr/bin/env bash
+
 # Project Calico Step by step
 wget -q http://projectcalico.org/latest/calicoctl
 chmod +x calicoctl
+mv calicoctl /usr/local/bin/
 sudo modprobe xt_set
 sudo modprobe ipip
-sudo ./calicoctl node --ip="<PUBLIC IP>"
+
+# Install the appropriate version of docker
+dpkg -i /vagrant/docker-engine.deb
+
+# Get the calico image
+sudo docker pull calico/node-libnetwork:v0.1.0
+
+echo You need to run: "sudo calicoctl node --ip=<PUBLIC IP>"
