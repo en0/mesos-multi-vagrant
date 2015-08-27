@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-curl -H "content-type: application/json" -X POST -d @webskel-task.json http://172.31.0.100:8080/v2/apps/
+curl -H "content-type: application/json" -X POST -d @${@} http://172.31.0.100:8080/v2/apps/
