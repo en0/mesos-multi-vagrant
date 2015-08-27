@@ -40,6 +40,7 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.101" | sudo tee /etc/mesos-slave/ip
       echo "slave1" | sudo tee /etc/mesos-slave/hostname
+      /vagrant/weave.sh
       sudo service mesos-slave start
     SHELL
   end
@@ -53,6 +54,7 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.102" | sudo tee /etc/mesos-slave/ip
       echo "slave2" | sudo tee /etc/mesos-slave/hostname
+      /vagrant/weave.sh 172.31.0.101
       sudo service mesos-slave start
     SHELL
   end
@@ -66,6 +68,7 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.103" | sudo tee /etc/mesos-slave/ip
       echo "slave3" | sudo tee /etc/mesos-slave/hostname
+      /vagrant/weave.sh 172.31.0.101
       sudo service mesos-slave start
     SHELL
   end

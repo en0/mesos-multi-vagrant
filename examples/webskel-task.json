@@ -5,7 +5,8 @@
             "type": "DOCKER",
             "image": "webskel:latest",
             "network": "BRIDGE",
-            "parameters": [],
+            "parameters": [ 
+            ],
             "portMappings": [
                 { "containerPort": 5000, "hostPort": 0, "protocol": "tcp", "servicePort": 80 }
             ]
@@ -15,5 +16,8 @@
     "cpus": 0.25,
     "instances": 1,
     "mem": 32,
-    "ports": [ 0 ]
+    "ports": [ 0 ],
+    "env": {
+        "DOCKER_HOST": "tcp://localhost:12375"
+    }
 }
