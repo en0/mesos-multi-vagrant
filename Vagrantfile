@@ -46,6 +46,11 @@ Vagrant.configure(2) do |config|
       echo $(weave proxy-env) | cut -f2 -d' ' | sudo tee -a /etc/environment
       source /etc/environment
       sudo service mesos-slave start
+      echo "Pre-loading Registry Service..."
+      docker pull registry:latest > /dev/null 2>&1
+      /vagrant/launch-task /vagrant/registry-task.json 2> /dev/null
+      echo "Waiting for Registry Service..." && sleep 10
+      cd /vagrant/haproxy && ./build_and_run.sh && cd .. && rm -rf haproxy
     SHELL
   end
 
@@ -64,6 +69,7 @@ Vagrant.configure(2) do |config|
       echo $(weave proxy-env) | cut -f2 -d' ' | sudo tee -a /etc/environment
       source /etc/environment
       sudo service mesos-slave start
+      cd /vagrant/haproxy && ./build_and_run.sh && cd .. && rm -rf haproxy
     SHELL
   end
 
@@ -82,6 +88,7 @@ Vagrant.configure(2) do |config|
       echo $(weave proxy-env) | cut -f2 -d' ' | sudo tee -a /etc/environment
       source /etc/environment
       sudo service mesos-slave start
+      cd /vagrant/haproxy && ./build_and_run.sh && cd .. && rm -rf haproxy
     SHELL
   end
 

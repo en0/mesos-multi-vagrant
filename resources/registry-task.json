@@ -1,0 +1,22 @@
+{
+    "cmd": "docker-registry",
+    "container": {
+        "docker": {
+            "type": "DOCKER",
+            "image": "registry:latest",
+            "network": "BRIDGE",
+            "parameters": [ 
+                { "key": "hostname", "value": "registry.weave.local" }
+            ],
+            "portMappings": [ ]
+        }
+    },
+    "id": "registry",
+    "cpus": 0.5,
+    "instances": 1,
+    "mem": 32,
+    "ports": [ 0 ],
+    "env": {
+        "DOCKER_HOST": "tcp://localhost:12375"
+    }
+}

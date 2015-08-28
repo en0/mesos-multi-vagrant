@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+curl \
+    -X POST \
+    -H "content-type: application/json" \
+    -d @${@} http://172.31.0.100:8080/v2/apps/

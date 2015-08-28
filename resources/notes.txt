@@ -1,1 +1,0 @@
-You can place items in this directory that will be copied into each VM.
