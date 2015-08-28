@@ -81,7 +81,6 @@ Vagrant.configure(2) do |config|
       sudo weave launch-proxy
       echo $(weave proxy-env) | cut -f2 -d' ' | sudo tee -a /etc/environment
       source /etc/environment
-      /vagrant/weave.sh 172.31.0.101
       sudo service mesos-slave start
     SHELL
   end
