@@ -9,12 +9,12 @@
 #   -nodes \
 #   -newkey rsa:4096 \
 #   -keyout ${REGISTRY}.key \
-#   -out ${REGISTRY}.cert \
+#   -out ${REGISTRY}.crt \
 #   -subj "/C=AU/ST=Iowa/L=Springfield/O=LFW/CN=${REGISTRY}" \
 #   -days 360 > /dev/null 2>&1
 # 
 # echo "Creating PEM File..."
-# cat ${REGISTRY}.cert ${REGISTRY}.key > ${REGISTRY}.pem
+# cat ${REGISTRY}.crt ${REGISTRY}.key > ${REGISTRY}.pem
 
 echo "Building HAPROXY container. This might take a moment..."
 docker build -t haproxy:local . > /dev/null 2>&1
