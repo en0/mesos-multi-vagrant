@@ -95,6 +95,9 @@ Vagrant.configure(2) do |config|
       echo "zk://172.31.0.100:2181/mesos" | sudo tee /etc/mesos/zk
       echo "172.31.0.103" | sudo tee /etc/mesos-slave/ip
       echo "slave3" | sudo tee /etc/mesos-slave/hostname
+      sudo mv /vagrant/etcd.upstart /etc/init.d/etcd
+      sudo chmod +x /etc/init.d/etcd
+      sudo chown root:root /etc/init.d/etcd
       sudo mv /vagrant/etcd-slave.conf /etc/default/etcd
       sudo chown root:root /etc/default/etcd
       sudo service etcd start
