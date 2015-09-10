@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-echo $#
-
 if [ $# -ne  1 ]
 then
     echo -e "Marathon launch script\n"
     echo -e "Usage: $0 [path_to_json_job_request]\n"
-    echo -e "For example to launch the webskeleton project: $0 webskel-task.json\n"
+    echo -e "To launch webskeleton project: $0 webskel-task.json\n"
     exit 1
 fi
 
