@@ -8,7 +8,7 @@
     "builders":
     [
         {
-            "name": "mesos-master",
+            "name": "ubuntu-14.04.3-server-amd64",
 
             "type": "qemu",
             "format": "qcow2",
@@ -53,10 +53,8 @@
             "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
             "scripts": [
                 "scripts/update.sh",
-                "scripts/packages.sh",
                 "scripts/network.sh",
-                "scripts/vagrant.sh",
-                "scripts/master.sh"
+                "scripts/vagrant.sh"
             ]
         }
     ],
@@ -64,7 +62,7 @@
     "post-processors": [
         {
             "keep_input_artifact": false,
-            "output": "../mesos-master.box",
+            "output": "../ubuntu-14.04.3-server-amd64.box",
             "type": "vagrant"
         }
     ]
