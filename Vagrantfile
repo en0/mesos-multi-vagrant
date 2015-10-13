@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
     slave2.vm.provision "shell", path: "scripts/mesos-slave-setup.sh"
     slave2.vm.provision "shell", inline: <<-SHELL
       echo "172.31.0.102" | tee /etc/mesos-slave/ip
-      echo "slave1" | tee /etc/mesos-slave/hostname
+      echo "slave2" | tee /etc/mesos-slave/hostname
       service mesos-slave start
     SHELL
     slave2.vm.provision "shell", path: "scripts/etcd.sh"
@@ -97,24 +97,23 @@ Vagrant.configure(2) do |config|
     slave3.vm.network "private_network", ip: "172.31.0.103", netmask: "255.255.0.0"
     slave3.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
     slave3.vm.provision "shell", path: "scripts/sysadmin.sh"
-    slave3.vm.provision "shell", path: "scripts/mesos.sh"
-    slave3.vm.provision "shell", path: "scripts/etcd.sh"
-#    slave3.vm.provision "shell", path: "scripts/docker.sh"
-    slave3.vm.provision "shell", path: "scripts/slave.sh"
-    slave3.vm.provision "shell", path: "scripts/example.sh"
+    slave3.vm.provision "shell", path: "scripts/docker.sh"
+    slave3.vm.provision "shell", path: "scripts/mesos-install.sh"
+    slave3.vm.provision "shell", path: "scripts/mesos-slave-setup.sh"
     slave3.vm.provision "shell", inline: <<-SHELL
-      service mesos-slave stop
-      echo "zk://172.31.0.100:2181/mesos" | tee /etc/mesos/zk
       echo "172.31.0.103" | tee /etc/mesos-slave/ip
       echo "slave3" | tee /etc/mesos-slave/hostname
-      mv /vagrant/etcd.upstart /etc/init.d/etcd
-      chmod +x /etc/init.d/etcd
-      chown root:root /etc/init.d/etcd
-      mv /vagrant/etcd-slave.conf /etc/default/etcd
-      chown root:root /etc/default/etcd
-      service etcd start
       service mesos-slave start
     SHELL
+    slave3.vm.provision "shell", path: "scripts/etcd.sh"
+    slave3.vm.provision "shell", inline: <<-SHELL
+      cp /vagrant/etcd-slave.conf /etc/default/etcd
+      service etcd start
+      update-rc.d etcd defaults
+    SHELL
+    slave3.vm.provision "shell", path: "scripts/calico-install.sh"
+    slave3.vm.provision "shell", inline: "calicoctl node --ip=172.31.0.103"
+    slave3.vm.provision "shell", path: "scripts/example.sh"
   end
 
   config.vm.box_check_update = false
