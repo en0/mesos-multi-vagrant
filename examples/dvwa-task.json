@@ -1,0 +1,21 @@
+{
+    "container": {
+        "docker": {
+            "type": "DOCKER",
+            "image": "citizenstig/dvwa",
+            "network": "BRIDGE",
+            "parameters": [],
+            "portMappings": [
+                { "containerPort": 80, "hostPort": 0, "protocol": "tcp", "servicePort": 8080 }
+            ]
+        }
+    },
+    "id": "dvwa",
+    "cpus": 0.25,
+    "instances": 1,
+    "mem": 32,
+    "ports": [ 0 ],
+    "env": {
+        "DOCKER_HOST": "localhost:2377"
+    }
+}
