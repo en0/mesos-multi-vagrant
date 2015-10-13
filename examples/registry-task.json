@@ -3,7 +3,7 @@
     "container": {
         "docker": {
             "type": "DOCKER",
-            "image": "registry:2.1.1",
+            "image": "registry:latest",
             "network": "BRIDGE",
             "parameters": [],
             "portMappings": [
