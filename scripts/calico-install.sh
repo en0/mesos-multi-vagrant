@@ -6,7 +6,7 @@ wget https://github.com/projectcalico/calico-docker/releases/download/v0.4.9/cal
 # add sha sum check
 chmod +x calicoctl
 mv calicoctl /usr/local/bin/
-# modprobe xt_set
-# modprobe ipip
+modprobe xt_set
+modprobe ipip
 
 docker pull calico/node:v0.4.9
