@@ -1,0 +1,51 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          calico 
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Init for calico
+# Description:       Calico provides layer 3 networking and isolation
+### END INIT INFO
+set -ue
+set -o nounset
+
+NAME="calico"
+DESC="calico"
+
+start() {
+  /usr/local/bin/calicoctl node --ip={{host_ip}} 2>&1
+}
+
+stop() {
+  /usr/local/bin/calicoctl node stop --force
+  /usr/bin/docker rm -f calico-node 2>/dev/null
+}
+
+
+case "${1-}" in
+  start)
+    echo -n "Starting $DESC: "
+    start
+    echo "$NAME."
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+    stop
+    echo "$NAME."
+    ;;
+  restart)
+    echo -n "Restarting $DESC: "
+    stop
+    sleep 1
+    start
+    echo "$NAME."
+    ;;
+  status)
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}" >&2
+    exit 1
+    ;;
+esac

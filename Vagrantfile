@@ -61,8 +61,12 @@ Vagrant.configure(2) do |config|
       service etcd start
       update-rc.d etcd defaults
     SHELL
-    slave1.vm.provision "shell", path: "scripts/calico-install.sh"
-    slave1.vm.provision "shell", inline: "calicoctl node --ip=172.31.0.101"
+    slave1.vm.provision "shell", path: "scripts/calico.sh"
+    slave1.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/{{host_ip}}/172.31.0.101/' /etc/init.d/calico
+      service calico start
+      update-rc.d calico defaults
+    SHELL
     slave1.vm.provision "shell", path: "scripts/example.sh"
   end
 
@@ -86,8 +90,12 @@ Vagrant.configure(2) do |config|
       service etcd start
       update-rc.d etcd defaults
     SHELL
-    slave2.vm.provision "shell", path: "scripts/calico-install.sh"
-    slave2.vm.provision "shell", inline: "calicoctl node --ip=172.31.0.102"
+    slave2.vm.provision "shell", path: "scripts/calico.sh"
+    slave2.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/{{host_ip}}/172.31.0.102/' /etc/init.d/calico
+      service calico start
+      update-rc.d calico defaults
+    SHELL
     slave2.vm.provision "shell", path: "scripts/example.sh"
   end
 
@@ -111,8 +119,12 @@ Vagrant.configure(2) do |config|
       service etcd start
       update-rc.d etcd defaults
     SHELL
-    slave3.vm.provision "shell", path: "scripts/calico-install.sh"
-    slave3.vm.provision "shell", inline: "calicoctl node --ip=172.31.0.103"
+    slave3.vm.provision "shell", path: "scripts/calico.sh"
+    slave3.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/{{host_ip}}/172.31.0.103/' /etc/init.d/calico
+      service calico start
+      update-rc.d calico defaults
+    SHELL
     slave3.vm.provision "shell", path: "scripts/example.sh"
   end
 
